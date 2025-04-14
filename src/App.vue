@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
-import Loader from "@/components/Loader.vue";
+import PageLoader from "@/components/PageLoader.vue";
 import { useRouter } from "vue-router";
 
 import AuthLayout from "@/layouts/Auth.vue";
@@ -46,7 +46,7 @@ onMounted(async () => {
   <component :is="layoutComponent">
     <router-view></router-view>
   </component>
-  <loader></loader>
+  <page-loader></page-loader>
 </template>
 
 <style lang="scss"></style>

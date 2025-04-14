@@ -2,17 +2,30 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  label: {
-    type: String,
+  itemValue: {
     required: false,
-    default: "",
+    type: String,
+    default: "id",
+  },
+  itemTitle: {
+    required: false,
+    type: String,
+    default: "title",
+  },
+  items: {
+    required: true,
+    type: Array,
   },
   modelValue: {
     type: [String, Number],
     required: true,
     default: "",
   },
-  type: {
+  disabled: {
+    type: Boolean as () => boolean | undefined,
+    default: false,
+  },
+  label: {
     type: String,
   },
 });
@@ -30,12 +43,15 @@ let fieldValue = computed({
 </script>
 
 <template>
-  <div class="field">
-    <v-text-field
-      :type="type"
-      v-model="fieldValue"
+  <div class="autocomplete">
+    <v-autocomplete
       :label="label"
-    ></v-text-field>
+      :disabled="disabled"
+      :item-title="itemTitle"
+      :item-value="itemValue"
+      :items="items"
+      v-model="fieldValue"
+    ></v-autocomplete>
   </div>
 </template>
 

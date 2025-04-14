@@ -11,6 +11,8 @@ export default defineConfig({
       scss: {
         additionalData: `
           @use "@/scss/variables.scss" as *;
+          @use "@/scss/reset.scss" as *;
+          @use "@/scss/base.scss" as *;
         `,
       },
     },

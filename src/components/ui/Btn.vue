@@ -11,12 +11,16 @@ defineProps({
     type: String as () => "small" | "large" | "normal",
     default: "small",
   },
+  disabled: {
+    type: Boolean as () => boolean | undefined,
+    default: false,
+  },
 });
 </script>
 
 <template>
   <div class="btn">
-    <v-btn :to="to" :type="type" :size="size">
+    <v-btn :disabled="disabled" :to="to" :type="type" :size="size">
       <slot></slot>
     </v-btn>
   </div>
