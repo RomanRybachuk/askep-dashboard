@@ -8,7 +8,10 @@ const userService = useUserService();
 </script>
 
 <template>
-  <section class="layout layout-dashboard" v-if="userService.authUser">
+  <section
+    class="layout layout-dashboard d-flex flex-column"
+    v-if="userService.authUser"
+  >
     <header class="header">
       <div class="container">
         <div
@@ -22,15 +25,41 @@ const userService = useUserService();
         </div>
       </div>
     </header>
-    <slot></slot>
+    <main>
+      <slot></slot>
+    </main>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__inner">Design by Astwellsoft Release 1088</div>
+      </div>
+    </footer>
   </section>
 </template>
 
 <style scoped lang="scss">
+main {
+  flex: 1 0 auto;
+}
+
+.layout {
+  min-height: 100vh;
+}
+
 .header {
   &__inner {
     padding: 10px 0;
     font-size: 14px;
+  }
+}
+
+.footer {
+  background-color: rgba(var(--color-black), 1);
+
+  &__inner {
+    padding: 10px;
+    color: rgba(var(--color-white), 1);
+    text-align: center;
+    font-size: 12px;
   }
 }
 </style>

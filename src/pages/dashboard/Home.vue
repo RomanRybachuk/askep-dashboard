@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import doctorWomenPhoto from "@/assets/doctorwomen.png";
-import doctorManPhoto from "@/assets/doctorman.png";
+import { useVisitingService } from "@/store/services/Visiting.ts";
 
 import Autocomplete from "@/components/ui/Autocomplete.vue";
 
@@ -13,6 +12,7 @@ import type { TDoctor } from "@/types";
 import DataLoader from "@/components/DataLoader.vue";
 
 const doctorService = useDoctorService();
+const visitingService = useVisitingService();
 
 const specialties = [
   { id: 1, title: "Терапевт" },
@@ -29,50 +29,10 @@ const specialtyValue = ref<string | number>("");
 const dateTimeValue = ref<string>("");
 
 // const doctors = ref<TDoctor[] | null>(null);
-const doctors = ref<TDoctor[] | null>([
-  {
-    id: 25,
-    title: "Любов Костянтинівна",
-    specialties: [7],
-    experience: 16,
-    clinic: "Центр ментального здоров'я",
-    address: "вул. Тарнавського, 18, Львів",
-    room: "701",
-    photo: doctorWomenPhoto,
-  },
-  {
-    id: 26,
-    title: "Георгій Володимирович",
-    specialties: [7],
-    experience: 12,
-    clinic: "Психологічна допомога",
-    address: "вул. Сихівська, 12, Львів",
-    room: "702",
-    photo: doctorManPhoto,
-  },
-  {
-    id: 27,
-    title: "Дарина Миколаївна",
-    specialties: [7],
-    experience: 10,
-    clinic: "Менталіс",
-    address: "вул. Пасічна, 70, Львів",
-    room: "703",
-    photo: doctorWomenPhoto,
-  },
-  {
-    id: 28,
-    title: "Павло Ігорович",
-    specialties: [7],
-    experience: 13,
-    clinic: "Центр психотерапії",
-    address: "вул. Володимира Великого, 26, Львів",
-    room: "704",
-    photo: doctorManPhoto,
-  },
-]);
+const doctors = ref<TDoctor[] | null>(null);
 
 const doctorsLoading = ref(false);
+const doctorSelectLoading = ref<number>(-1);
 
 async function handleClickSubmit() {
   doctorsLoading.value = true;
@@ -88,9 +48,22 @@ async function handleClickSubmit() {
 
   doctorsLoading.value = false;
 
-  specialtyValue.value = "";
-
   doctors.value = doctorsResponse;
+}
+
+async function handleClickSelectDoctor(doctor: TDoctor) {
+  doctorSelectLoading.value = doctor.id;
+
+  await visitingService.createVisiting({
+    doctor: doctor.id,
+    dateTime: new Date(dateTimeValue.value).getTime(),
+  });
+
+  doctorSelectLoading.value = -1;
+
+  specialtyValue.value = "";
+  dateTimeValue.value = "";
+  doctors.value = null;
 }
 
 function getMinDateTimeValue() {
@@ -135,8 +108,19 @@ function getMinDateTimeValue() {
           </form>
         </div>
 
+        <div v-if="visitingService.visiting && !doctors">
+          <h4>Нещодавні записи</h4>
+          <ul v-if="visitingService.visiting.length">
+            <li v-for="visit of visitingService.visiting" :key="visit.id">
+              <div>
+                Час запису: {{ new Date(visit.dateTime).toLocaleString() }}
+              </div>
+            </li>
+          </ul>
+          <div v-else>Записів не знайдено</div>
+        </div>
+
         <div v-if="doctors" class="d-flex flex-column ga-3">
-          <h3>Вільні лікарі</h3>
           <ul v-if="doctors.length" class="d-flex flex-column ga-5">
             <li
               class="doctor-card d-flex ga-5"
@@ -154,11 +138,19 @@ function getMinDateTimeValue() {
                   <li>Адреса: {{ doctor.address }}</li>
                   <li>Кабінет: {{ doctor.room }}</li>
                 </ul>
-                <btn variant="outlined">Обрати лікаря</btn>
+                <btn
+                  :loading="doctorSelectLoading === doctor.id"
+                  @click="handleClickSelectDoctor(doctor)"
+                  variant="outlined"
+                  >Обрати лікаря</btn
+                >
               </div>
             </li>
           </ul>
           <div v-else>Вільних лікарів на жаль немає</div>
+        </div>
+        <div v-else>
+          <h4>Тут відображатимуться вільні лікарі</h4>
         </div>
         <DataLoader v-if="doctorsLoading"></DataLoader>
       </div>

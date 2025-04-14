@@ -6,8 +6,8 @@
 
 <style lang="scss">
 .data-loader {
-  width: 25px;
-  height: 25px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   position: relative;
   animation: rotate 1s linear infinite;
@@ -18,7 +18,7 @@
   position: absolute;
   inset: 0px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--color-black), 1);
+  border: 3px solid rgba(var(--color-black), 1);
   animation: prixClipFix 2s linear infinite;
 }
 

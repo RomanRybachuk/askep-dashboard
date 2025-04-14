@@ -1,10 +1,13 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { userApiInstance } from "@/api/users";
+import { useVisitingService } from "@/store/services/Visiting.ts";
 
 import { createUser, authState, logOut, signIn } from "@/firebase";
 
 export const useUserService = defineStore("userService", () => {
+  const visitingService = useVisitingService();
+
   const authUser = ref<any>(null);
   const authData = ref<any>(null);
 
@@ -19,6 +22,8 @@ export const useUserService = defineStore("userService", () => {
     setAuthUser(userData.user);
     setAuthUser(response.data.data);
 
+    visitingService.getVisiting();
+
     return response;
   }
 
@@ -32,6 +37,8 @@ export const useUserService = defineStore("userService", () => {
 
     setAuthUser(userData.user);
 
+    visitingService.getVisiting();
+
     return userData;
   }
 
@@ -40,6 +47,7 @@ export const useUserService = defineStore("userService", () => {
 
     setAuthUser(null);
     setAuthData(null);
+    visitingService.setVisitingState(null);
 
     return response;
   }

@@ -22,3 +22,9 @@ export type TDoctor = {
   room: string;
   photo: string;
 };
+
+export type TVisiting = {
+  id: string;
+  doctor: number;
+  dateTime: number;
+};

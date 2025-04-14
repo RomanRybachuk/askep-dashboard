@@ -23,12 +23,17 @@ defineProps({
   prependIcon: {
     type: String,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
 <template>
   <div class="btn">
     <v-btn
+      :loading="loading"
       :appendIcon="appendIcon"
       :prependIcon="prependIcon"
       density="comfortable"

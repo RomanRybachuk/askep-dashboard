@@ -10,9 +10,11 @@ const router = useRouter();
 
 import { useAppStore } from "@/store";
 import { useUserService } from "@/store/services/User";
+import { useVisitingService } from "@/store/services/Visiting";
 
 const appStore = useAppStore();
 const userService = useUserService();
+const visitingService = useVisitingService();
 
 const layoutComponent = computed(() => {
   switch (appStore.layoutName) {
@@ -38,6 +40,7 @@ onMounted(async () => {
 
   if (user) {
     userService.getUserData();
+    visitingService.getVisiting();
   }
 });
 </script>
