@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
+    "@types/cors": "^2.8.17",
+    "cors": "^2.8.5",
     "firebase": "^11.6.0",
     "pinia": "^3.0.2",
     "vue": "^3.5.13",

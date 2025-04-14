@@ -33,8 +33,4 @@ onMounted(async () => {
   </component>
 </template>
 
-<style scoped lang="scss">
-body {
-  background-color: $red;
-}
-</style>
+<style lang="scss"></style>
