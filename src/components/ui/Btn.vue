@@ -9,18 +9,36 @@ defineProps({
   },
   size: {
     type: String as () => "small" | "large" | "normal",
-    default: "small",
   },
   disabled: {
     type: Boolean as () => boolean | undefined,
     default: false,
+  },
+  variant: {
+    type: String as () => "outlined" | "tonal" | "text",
+  },
+  appendIcon: {
+    type: String,
+  },
+  prependIcon: {
+    type: String,
   },
 });
 </script>
 
 <template>
   <div class="btn">
-    <v-btn :disabled="disabled" :to="to" :type="type" :size="size">
+    <v-btn
+      :appendIcon="appendIcon"
+      :prependIcon="prependIcon"
+      density="comfortable"
+      class="text-capitalize"
+      :variant="variant"
+      :disabled="disabled"
+      :to="to"
+      :type="type"
+      :size="size"
+    >
       <slot></slot>
     </v-btn>
   </div>

@@ -32,6 +32,9 @@ let fieldValue = computed({
 <template>
   <div class="field">
     <v-text-field
+      hide-details
+      density="compact"
+      variant="solo-filled"
       :type="type"
       v-model="fieldValue"
       :label="label"

@@ -1,4 +1,10 @@
 :root {
   --color-white: 250, 250, 250;
   --color-black: 0, 0, 0;
+
+  --color-red: 211, 47, 47;
+  --color-blue: 7, 86, 126;
+  --color-sky: 20, 193, 197;
+
+  --color-danger: var(--color-red);
 }

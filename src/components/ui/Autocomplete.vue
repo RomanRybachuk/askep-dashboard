@@ -45,6 +45,9 @@ let fieldValue = computed({
 <template>
   <div class="autocomplete">
     <v-autocomplete
+      hide-details
+      variant="solo-filled"
+      density="compact"
       :label="label"
       :disabled="disabled"
       :item-title="itemTitle"

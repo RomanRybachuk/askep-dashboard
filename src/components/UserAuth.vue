@@ -2,6 +2,8 @@
 import { useUserService } from "@/store/services/User";
 import { useAppStore } from "@/store";
 
+import Logo from "@/components/Logo.vue";
+
 import Field from "@/components/ui/Field.vue";
 import Btn from "@/components/ui/Btn.vue";
 import { useRouter } from "vue-router";
@@ -19,8 +21,12 @@ const props = defineProps({
 
 const authData = computed(() => {
   return {
-    buttonSubmitText: props.type === "signin" ? "Sign In" : "Sign up",
-    buttonSwitchTypeText: props.type === "signin" ? "Sign up" : "Sign in",
+    titleText:
+      props.type === "signin"
+        ? "Увійти в кабінет пацієнта"
+        : "Зареєструватись в кабінет пацієнта",
+    buttonSwitchTypeText:
+      props.type === "signin" ? "Зареєструватись" : "Увійти",
     buttonSwitchTypeLink: props.type === "signin" ? "/signup" : "signin",
   };
 });
@@ -70,18 +76,59 @@ async function handleClickSubmit() {
 
 <template>
   <div class="auth-page">
-    <form @submit.prevent="handleClickSubmit">
-      <field type="email" v-model="emailValue" label="Email"></field>
-      <field type="password" v-model="passwordValue" label="Password"></field>
-      <btn type="submit">{{ authData.buttonSubmitText }}</btn>
-      <p>{{ errorMessage }}</p>
-    </form>
-    <br />
-    <br />
-    <btn :to="authData.buttonSwitchTypeLink">{{
-      authData.buttonSwitchTypeText
-    }}</btn>
+    <div class="container">
+      <div class="auth-page__inner d-flex ga-4">
+        <div class="auth-page__content d-flex align-center justify-center">
+          <logo :maxWidth="280"></logo>
+        </div>
+        <div class="auth-page__content d-flex flex-column justify-center ga-4">
+          <h1>{{ authData.titleText }}</h1>
+          <form
+            class="auth-form d-flex flex-column ga-5"
+            @submit.prevent="handleClickSubmit"
+          >
+            <div class="auth-form__fields d-flex flex-column ga-4">
+              <field type="email" v-model="emailValue" label="Email"></field>
+              <field
+                type="password"
+                v-model="passwordValue"
+                label="Password"
+              ></field>
+            </div>
+
+            <btn appendIcon="$arrowRightThin" type="submit">Відправити</btn>
+            <p class="auth-form__error" v-if="errorMessage">
+              {{ errorMessage }}
+            </p>
+          </form>
+          <btn
+            variant="text"
+            size="small"
+            :to="authData.buttonSwitchTypeLink"
+            >{{ authData.buttonSwitchTypeText }}</btn
+          >
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.auth-form {
+  &__error {
+    font-size: 14px;
+    color: rgba(var(--color-danger), 1);
+  }
+}
+
+.auth-page {
+  &__inner {
+    padding: 30px 0;
+    min-height: 100vh;
+  }
+
+  &__content {
+    flex: 1 0 50%;
+  }
+}
+</style>

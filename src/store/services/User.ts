@@ -5,8 +5,8 @@ import { userApiInstance } from "@/api/users";
 import { createUser, authState, logOut, signIn } from "@/firebase";
 
 export const useUserService = defineStore("userService", () => {
-  const authUser = ref(null);
-  const authData = ref(null);
+  const authUser = ref<any>(null);
+  const authData = ref<any>(null);
 
   async function userSignUp(email: string, password: string) {
     const userData = await createUser(email, password);
@@ -85,6 +85,7 @@ export const useUserService = defineStore("userService", () => {
     getUserState,
     userSignOut,
     authUser,
+    authData,
     setAuthUser,
     getUserData,
     setAuthData,

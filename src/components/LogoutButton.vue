@@ -14,7 +14,7 @@ async function handleClickLogout() {
 </script>
 
 <template>
-  <btn @click="handleClickLogout">Logout</btn>
+  <btn appendIcon="$logout" @click="handleClickLogout">Logout</btn>
 </template>
 
 <style scoped lang="scss"></style>

@@ -1,0 +1,58 @@
+@font-face {
+  font-family: "Montserrat";
+  src: url("@/assets/montserrat/400/fonts/Montserrat-Regular.eot");
+  src: url("@/assets/montserrat/400/fonts/Montserrat-Regular.eot?#iefix")
+      format("embedded-opentype"),
+    url("@/assets/montserrat/400/fonts/Montserrat-Regular.woff2")
+      format("woff2"),
+    url("@/assets/montserrat/400/fonts/Montserrat-Regular.woff") format("woff"),
+    url("@/assets/montserrat/400/fonts/Montserrat-Regular.ttf")
+      format("truetype"),
+    url("@/assets/montserrat/400/fonts/Montserrat-Regular.svg#Montserrat")
+      format("svg");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("@/assets/montserrat/500/fonts/Montserrat-Medium.eot");
+  src: url("@/assets/montserrat/500/fonts/Montserrat-Medium.eot?#iefix")
+      format("embedded-opentype"),
+    url("@/assets/montserrat/500/fonts/Montserrat-Medium.woff2") format("woff2"),
+    url("@/assets/montserrat/500/fonts/Montserrat-Medium.woff") format("woff"),
+    url("@/assets/montserrat/500/fonts/Montserrat-Medium.ttf")
+      format("truetype"),
+    url("@/assets/montserrat/500/fonts/Montserrat-Medium.svg#Montserrat Medium")
+      format("svg");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("@/assets/montserrat/700/fonts/Montserrat-Bold.eot");
+  src: url("@/assets/montserrat/700/fonts/Montserrat-Bold.eot?#iefix")
+      format("embedded-opentype"),
+    url("@/assets/montserrat/700/fonts/Montserrat-Bold.woff2") format("woff2"),
+    url("@/assets/montserrat/700/fonts/Montserrat-Bold.woff") format("woff"),
+    url("@/assets/montserrat/700/fonts/Montserrat-Bold.ttf") format("truetype"),
+    url("@/assets/montserrat/700/fonts/Montserrat-Bold.svg#Montserrat")
+      format("svg");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("@/assets/montserrat/900/fonts/Montserrat-Black.eot");
+  src: url("@/assets/montserrat/900/fonts/Montserrat-Black.eot?#iefix")
+      format("embedded-opentype"),
+    url("@/assets/montserrat/900/fonts/Montserrat-Black.woff2") format("woff2"),
+    url("@/assets/montserrat/900/fonts/Montserrat-Black.woff") format("woff"),
+    url("@/assets/montserrat/900/fonts/Montserrat-Black.ttf") format("truetype"),
+    url("@/assets/montserrat/900/fonts/Montserrat-Black.svg#Montserrat Black")
+      format("svg");
+  font-weight: 900;
+  font-display: swap;
+}

@@ -10,7 +10,7 @@ import { VTimePicker } from "vuetify/labs/VTimePicker";
 // import { aliases } from "vuetify/iconsets/mdi";
 import * as directives from "vuetify/directives";
 import { mdi } from "vuetify/iconsets/mdi-svg";
-import { mdiAccount, mdiMenuDown } from "@mdi/js";
+import { mdiAccount, mdiMenuDown, mdiLogout, mdiArrowRightThin } from "@mdi/js";
 // Icons
 
 export default createVuetify({
@@ -27,6 +27,8 @@ export default createVuetify({
     aliases: {
       account: mdiAccount,
       dropdown: mdiMenuDown,
+      logout: mdiLogout,
+      arrowRightThin: mdiArrowRightThin,
     },
     sets: {
       mdi,

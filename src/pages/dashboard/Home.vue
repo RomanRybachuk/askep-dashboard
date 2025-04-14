@@ -4,7 +4,6 @@ import { ref } from "vue";
 import doctorWomenPhoto from "@/assets/doctorwomen.png";
 import doctorManPhoto from "@/assets/doctorman.png";
 
-import LogoutButton from "@/components/LogoutButton.vue";
 import Autocomplete from "@/components/ui/Autocomplete.vue";
 
 import Btn from "@/components/ui/Btn.vue";
@@ -105,54 +104,108 @@ function getMinDateTimeValue() {
 
 <template>
   <div class="home-page">
-    <logout-button></logout-button>
-    <form @submit.prevent="handleClickSubmit" class="d-flex align-center">
-      <autocomplete
-        label="Спеціальність"
-        :items="specialties"
-        v-model="specialtyValue"
-      ></autocomplete>
-      <input
-        v-model="dateTimeValue"
-        :min="getMinDateTimeValue()"
-        type="datetime-local"
-      />
-      <btn
-        :disabled="!(specialtyValue && dateTimeValue && !doctorsLoading)"
-        type="submit"
-        >Знайти вільного лікаря</btn
-      >
-    </form>
-    <div v-if="doctors">
-      <ul v-if="doctors.length" class="d-flex flex-column ga-5">
-        <li
-          class="doctor-card d-flex ga-5"
-          v-for="doctor of doctors"
-          :key="doctor.id"
-        >
-          <div class="doctor-card__photo">
-            <img :src="doctor.photo" alt="doctor photo" />
-          </div>
-          <div class="d-flex flex-column ga-3">
-            <ul class="doctor-card__features">
-              <li>Ім'я: {{ doctor.title }}</li>
-              <li>Стаж: {{ doctor.experience }}</li>
-              <li>Лікарня: {{ doctor.clinic }}</li>
-              <li>Адреса: {{ doctor.address }}</li>
-              <li>Кабінет: {{ doctor.room }}</li>
-            </ul>
-            <btn>Записатись</btn>
-          </div>
-        </li>
-      </ul>
-      <div v-else>Вільних лікарів на жаль немає</div>
+    <div class="container">
+      <div class="home-page__inner d-flex flex-column ga-4">
+        <div class="search-content d-flex flex-column align-center ga-6">
+          <h1>Знайти свого лікаря</h1>
+          <form
+            @submit.prevent="handleClickSubmit"
+            class="search-form d-flex align-center ga-5 w-100"
+          >
+            <div class="search-form__fields d-flex align-center ga-5">
+              <autocomplete
+                class="search-form__field"
+                label="Спеціальність"
+                :items="specialties"
+                v-model="specialtyValue"
+              ></autocomplete>
+              <input
+                class="search-form__field"
+                v-model="dateTimeValue"
+                :min="getMinDateTimeValue()"
+                type="datetime-local"
+              />
+            </div>
+
+            <btn
+              :disabled="!(specialtyValue && dateTimeValue && !doctorsLoading)"
+              type="submit"
+              >Знайти вільного лікаря</btn
+            >
+          </form>
+        </div>
+
+        <div v-if="doctors" class="d-flex flex-column ga-3">
+          <h3>Вільні лікарі</h3>
+          <ul v-if="doctors.length" class="d-flex flex-column ga-5">
+            <li
+              class="doctor-card d-flex ga-5"
+              v-for="doctor of doctors"
+              :key="doctor.id"
+            >
+              <div class="doctor-card__photo">
+                <img :src="doctor.photo" alt="doctor photo" />
+              </div>
+              <div class="d-flex flex-column ga-3">
+                <ul class="doctor-card__features">
+                  <li>Ім'я: {{ doctor.title }}</li>
+                  <li>Стаж: {{ doctor.experience }} років</li>
+                  <li>Лікарня: {{ doctor.clinic }}</li>
+                  <li>Адреса: {{ doctor.address }}</li>
+                  <li>Кабінет: {{ doctor.room }}</li>
+                </ul>
+                <btn variant="outlined">Обрати лікаря</btn>
+              </div>
+            </li>
+          </ul>
+          <div v-else>Вільних лікарів на жаль немає</div>
+        </div>
+        <DataLoader v-if="doctorsLoading"></DataLoader>
+      </div>
     </div>
-    <DataLoader v-if="doctorsLoading"></DataLoader>
   </div>
 </template>
 
 <style scoped lang="scss">
+.search-content {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: rgba(var(--color-blue), 0.8);
+  border: 1px solid rgba(var(--color-blue), 0.05);
+  color: rgba(var(--color-white), 1);
+
+  input {
+    color: rgba(var(--color-white), 1) !important;
+  }
+
+  input[type="datetime-local"] {
+    border: 1px solid rgba(var(--color-white), 1);
+    border-radius: 8px;
+    padding: 7px;
+  }
+}
+
+.home-page {
+  &__inner {
+    padding: 40px 0;
+  }
+}
+
+.search-form {
+  &__fields {
+    flex: 1 0 auto;
+  }
+
+  &__field {
+    width: 100%;
+  }
+}
+
 .doctor-card {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: rgba(var(--color-sky), 0.1);
+
   &__photo {
     width: 150px;
     height: 150px;
