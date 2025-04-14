@@ -1,5 +1,7 @@
 <script setup lang="ts"></script>
 
-<template>Home</template>
+<template>
+  <v-btn>Click</v-btn>
+</template>
 
 <style scoped></style>

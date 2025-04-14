@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
 // import { useRoute } from "vue-router";
 
@@ -9,6 +9,7 @@ import DashboardLayout from "@/layouts/Dashboard.vue";
 // const route = useRoute();
 
 import { useAppStore } from "@/store";
+import { authState } from "@/firebase";
 
 const appStore = useAppStore();
 
@@ -20,6 +21,10 @@ const layoutComponent = computed(() => {
       return DashboardLayout;
   }
 });
+
+onMounted(async () => {
+  console.log(await authState());
+});
 </script>
 
 <template>
@@ -28,4 +33,8 @@ const layoutComponent = computed(() => {
   </component>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+body {
+  background-color: $red;
+}
+</style>

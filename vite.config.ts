@@ -6,6 +6,16 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+          @use "@/scss/variables.scss" as *;
+        `,
+      },
+    },
+  },
+  envPrefix: "ENV_",
   resolve: {
     alias: {
       "@": path.resolve("./src/"),
