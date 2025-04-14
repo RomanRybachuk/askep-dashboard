@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import Field from "@/components/form/Field.vue";
-import Btn from "@/components/Btn.vue";
+import UserAuth from "@/components/UserAuth.vue";
 </script>
 
 <template>
-  <div class="auth-page">
-    <form>
-      <field label="Email"></field>
-      <field label="Password"></field>
-      <btn>Sign in</btn>
-    </form>
-  </div>
+  <user-auth type="signin"></user-auth>
 </template>
 
 <style scoped></style>

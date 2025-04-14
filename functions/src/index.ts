@@ -1,6 +1,6 @@
 import { onRequest } from "firebase-functions/v2/https";
-const { setGlobalOptions } = require("firebase-functions/v2");
-import { Request, Response } from "express";
+import { setGlobalOptions } from "firebase-functions/v2";
+import { Request, Response } from "firebase-functions/v1";
 import { verifyAuth } from "./utils";
 
 import { db } from "./firebase";

@@ -30,7 +30,11 @@ request.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.data.idTokenExpired) {
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.idTokenExpired
+    ) {
       originalRequest.headers[
         "Authorization"
       ] = `Bearer ${await getAccessToken()}`;

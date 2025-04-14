@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import LogoutButton from "@/components/LogoutButton.vue";
+</script>
 
 <template>
-  <v-btn>Click</v-btn>
+  <logout-button></logout-button>
 </template>
 
 <style scoped></style>

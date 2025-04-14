@@ -4,12 +4,19 @@ defineProps({
     type: String as () => "submit" | "button",
     default: "button",
   },
+  to: {
+    type: String,
+  },
+  size: {
+    type: String as () => "small" | "large" | "normal",
+    default: "small",
+  },
 });
 </script>
 
 <template>
   <div class="btn">
-    <v-btn :type="type">
+    <v-btn :to="to" :type="type" :size="size">
       <slot></slot>
     </v-btn>
   </div>

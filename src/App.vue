@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 
-// import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
 import AuthLayout from "@/layouts/Auth.vue";
 import DashboardLayout from "@/layouts/Dashboard.vue";
 
-// const route = useRoute();
+const router = useRouter();
 
 import { useAppStore } from "@/store";
-import { authState } from "@/firebase";
+import { useUserService } from "@/store/services/User";
 
 const appStore = useAppStore();
+const userService = useUserService();
 
 const layoutComponent = computed(() => {
   switch (appStore.layoutName) {
@@ -23,7 +24,13 @@ const layoutComponent = computed(() => {
 });
 
 onMounted(async () => {
-  console.log(await authState());
+  const user = await userService.getUserState();
+
+  if (!user && appStore.layoutName !== "auth") {
+    router.push("/signin");
+  } else if (user && appStore.layoutName !== "dashboard") {
+    router.push("/");
+  }
 });
 </script>
 
