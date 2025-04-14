@@ -27,11 +27,33 @@ const routesMap = [
         return response.status(401).send(401);
       }
 
-      await db.collection("users").doc(request.body.id).set({
+      const userData = {
         data: true,
-      });
+      };
 
-      return response.status(200).send({ success: true });
+      await db.collection("users").doc(request.body.id).set(userData);
+
+      return response.status(200).send({ success: true, data: userData });
+    },
+  },
+  {
+    url: "/users/get",
+    method: "GET",
+    controller: async (request: Request, response: Response) => {
+      const verifyResponse: any = await verifyAuth(request, response);
+
+      if (!verifyResponse) {
+        return response.status(401).send(401);
+      }
+
+      const userData = await db
+        .collection("users")
+        .doc(verifyResponse.uid)
+        .get();
+
+      return response
+        .status(200)
+        .send({ success: true, data: userData.data() });
     },
   },
 ];

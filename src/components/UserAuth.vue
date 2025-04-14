@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useUserService } from "@/store/services/User";
+import { useAppStore } from "@/store";
 
 import Field from "@/components/ui/Field.vue";
 import Btn from "@/components/ui/Btn.vue";
@@ -7,6 +8,8 @@ import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
 
 const router = useRouter();
+const appStore = useAppStore();
+
 const props = defineProps({
   type: {
     type: String as () => "signin" | "signup",
@@ -23,24 +26,45 @@ const authData = computed(() => {
 });
 
 const userService = useUserService();
+
 const emailValue = ref("roman.rybachuk.work@gmail.com");
 const passwordValue = ref("123456789");
 
+const errorMessage = ref("");
+
 async function handleClickSubmit() {
-  if (!emailValue.value || !passwordValue.value) return;
+  if (!emailValue.value || !passwordValue.value) {
+    errorMessage.value = "There is some error";
+  }
+
+  errorMessage.value = "";
+
+  appStore.addUIPageBlokers(1);
 
   switch (props.type) {
     case "signin":
-      await userService.userSignIn(emailValue.value, passwordValue.value);
+      try {
+        await userService.userSignIn(emailValue.value, passwordValue.value);
+
+        router.push("/");
+      } catch (e: any) {
+        errorMessage.value = "There is some error";
+      }
 
       break;
     case "signup":
-      await userService.userSignUp(emailValue.value, passwordValue.value);
+      try {
+        await userService.userSignUp(emailValue.value, passwordValue.value);
+
+        router.push("/");
+      } catch (e: any) {
+        errorMessage.value = "There is some error";
+      }
 
       break;
   }
 
-  router.push("/");
+  appStore.addUIPageBlokers(-1);
 }
 </script>
 
@@ -50,6 +74,7 @@ async function handleClickSubmit() {
       <field type="email" v-model="emailValue" label="Email"></field>
       <field type="password" v-model="passwordValue" label="Password"></field>
       <btn type="submit">{{ authData.buttonSubmitText }}</btn>
+      <p>{{ errorMessage }}</p>
     </form>
     <br />
     <br />

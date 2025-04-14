@@ -6,6 +6,7 @@ import { createUser, authState, logOut, signIn } from "@/firebase";
 
 export const useUserService = defineStore("userService", () => {
   const authUser = ref(null);
+  const authData = ref(null);
 
   async function userSignUp(email: string, password: string) {
     const userData = await createUser(email, password);
@@ -13,9 +14,10 @@ export const useUserService = defineStore("userService", () => {
     // Handle create user error
     if (!userData.user) return;
 
-    const response = await userApiInstance.userCreate(userData.user.uid);
+    const response = await createUserData(userData.user.uid);
 
     setAuthUser(userData.user);
+    setAuthUser(response.data.data);
 
     return response;
   }
@@ -26,6 +28,8 @@ export const useUserService = defineStore("userService", () => {
     // Handle create user error
     if (!userData.user) return;
 
+    await getUserData();
+
     setAuthUser(userData.user);
 
     return userData;
@@ -35,10 +39,28 @@ export const useUserService = defineStore("userService", () => {
     const response = await logOut();
 
     setAuthUser(null);
+    setAuthData(null);
 
     return response;
   }
 
+  // API
+  async function getUserData() {
+    const response = await userApiInstance.userGet();
+
+    setAuthData(response.data.data);
+
+    return response;
+  }
+
+  // API
+  async function createUserData(id: string) {
+    const response = await userApiInstance.userCreate(id);
+
+    return response;
+  }
+
+  // FIREBASE
   async function getUserState() {
     const user = await authState();
 
@@ -47,8 +69,14 @@ export const useUserService = defineStore("userService", () => {
     return user;
   }
 
+  // SETTER
   async function setAuthUser(value: any) {
     authUser.value = value;
+  }
+
+  // SETTER
+  async function setAuthData(value: any) {
+    authData.value = value;
   }
 
   return {
@@ -58,5 +86,7 @@ export const useUserService = defineStore("userService", () => {
     userSignOut,
     authUser,
     setAuthUser,
+    getUserData,
+    setAuthData,
   };
 });

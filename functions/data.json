@@ -1,0 +1,13 @@
+{
+ iss: 'https://securetoken.google.com/askep-dashboard',
+   aud: 'askep-dashboard',
+  auth_time: 1744643156,
+    user_id: 'L1eD3GQgB7SAy9ax3igl8wrq2u93',
+    sub: 'L1eD3GQgB7SAy9ax3igl8wrq2u93',  
+   iat: 1744643156,
+   exp: 1744646756,
+  email: 'roman.rybachuk.work88888888@gmail.com',
+   email_verified: false,
+     firebase: { identities: { email: [Array] }, sign_in_provider: 'password' },
+   uid: 'L1eD3GQgB7SAy9ax3igl8wrq2u93'   
+ }

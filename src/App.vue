@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
-
+import Loader from "@/components/Loader.vue";
 import { useRouter } from "vue-router";
 
 import AuthLayout from "@/layouts/Auth.vue";
@@ -24,12 +24,20 @@ const layoutComponent = computed(() => {
 });
 
 onMounted(async () => {
+  appStore.addUIPageBlokers(1);
+
   const user = await userService.getUserState();
 
   if (!user && appStore.layoutName !== "auth") {
-    router.push("/signin");
+    await router.push("/signin");
   } else if (user && appStore.layoutName !== "dashboard") {
-    router.push("/");
+    await router.push("/");
+  }
+
+  appStore.addUIPageBlokers(-1);
+
+  if (user) {
+    userService.getUserData();
   }
 });
 </script>
@@ -38,6 +46,7 @@ onMounted(async () => {
   <component :is="layoutComponent">
     <router-view></router-view>
   </component>
+  <loader></loader>
 </template>
 
 <style lang="scss"></style>
