@@ -1,6 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https";
 const { setGlobalOptions } = require("firebase-functions/v2");
 import { Request, Response } from "express";
+import { verifyAuth } from "./utils";
+
+import { db } from "./firebase";
 
 import cors = require("cors");
 
@@ -15,10 +18,20 @@ const corsConfig = cors({
 
 const routesMap = [
   {
-    url: "/feedback",
-    method: "GET",
-    controller: (request: Request, response: Response) => {
-      response.status(201).send("/feedback");
+    url: "/users/create",
+    method: "POST",
+    controller: async (request: Request, response: Response) => {
+      const verifyResponse: any = await verifyAuth(request, response);
+
+      if (!verifyResponse) {
+        return response.status(401).send(401);
+      }
+
+      await db.collection("users").doc(request.body.id).set({
+        data: true,
+      });
+
+      return response.status(200).send({ success: true });
     },
   },
 ];
