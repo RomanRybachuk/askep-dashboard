@@ -215,4 +215,16 @@ function getMinDateTimeValue() {
     font-size: 14px;
   }
 }
+
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+
+    &__fields {
+      flex-direction: column;
+      max-width: 500px;
+      width: 100%;
+    }
+  }
+}
 </style>

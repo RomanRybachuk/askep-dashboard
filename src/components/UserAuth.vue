@@ -77,7 +77,7 @@ async function handleClickSubmit() {
 <template>
   <div class="auth-page">
     <div class="container">
-      <div class="auth-page__inner d-flex ga-4">
+      <div class="auth-page__inner d-flex">
         <div class="auth-page__content d-flex align-center justify-center">
           <logo :maxWidth="280"></logo>
         </div>
@@ -129,6 +129,19 @@ async function handleClickSubmit() {
 
   &__content {
     flex: 1 0 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-page {
+    &__inner {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__content {
+      justify-content: flex-start !important;
+    }
   }
 }
 </style>

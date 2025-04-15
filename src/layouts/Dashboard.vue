@@ -19,7 +19,7 @@ const userService = useUserService();
         >
           <logo></logo>
           <div class="d-flex align-center ga-3">
-            <div>{{ userService.authUser.email }}</div>
+            <div class="header__email">{{ userService.authUser.email }}</div>
             <logout-button></logout-button>
           </div>
         </div>
@@ -60,6 +60,14 @@ main {
     color: rgba(var(--color-white), 1);
     text-align: center;
     font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    &__email {
+      display: none;
+    }
   }
 }
 </style>

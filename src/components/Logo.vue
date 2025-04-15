@@ -1,14 +1,7 @@
-<script setup lang="ts">
-defineProps({
-  maxWidth: {
-    type: Number,
-    default: 120,
-  },
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="logo" :style="{ maxWidth: maxWidth + 'px' }">
+  <div class="logo">
     <router-link class="logo__link" to="/">
       <img class="logo__image" src="@/assets/logo.svg" alt="logo" />
     </router-link>
@@ -18,7 +11,9 @@ defineProps({
 <style scoped lang="scss">
 .logo {
   display: flex;
-  width: 100%;
+  flex: 1 0 auto;
+  max-width: 120px;
+
   &__link {
     width: 100%;
   }
