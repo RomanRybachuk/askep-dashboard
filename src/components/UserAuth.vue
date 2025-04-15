@@ -33,8 +33,8 @@ const authData = computed(() => {
 
 const userService = useUserService();
 
-const emailValue = ref("roman.rybachuk.work@gmail.com");
-const passwordValue = ref("123456789");
+const emailValue = ref("");
+const passwordValue = ref("");
 
 const errorMessage = ref("");
 

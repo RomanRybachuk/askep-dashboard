@@ -23,7 +23,11 @@ setGlobalOptions({
 });
 
 const corsConfig = cors({
-  origin: ["http://localhost:5173"],
+  origin: [
+    "http://localhost:5173",
+    "https://askep-dashboard.web.app",
+    "https://askep-dashboard.firebaseapp.com",
+  ],
 });
 
 const routesMap = [
