@@ -109,11 +109,15 @@ function getMinDateTimeValue() {
         </div>
 
         <div v-if="visitingService.visiting && !doctors">
-          <h4>Нещодавні записи</h4>
+          <h4>Дата та час запланованих візитів</h4>
           <ul v-if="visitingService.visiting.length">
-            <li v-for="visit of visitingService.visiting" :key="visit.id">
+            <li
+              v-for="(visit, index) of visitingService.visiting"
+              :key="visit.id"
+            >
               <div>
-                Час запису: {{ new Date(visit.dateTime).toLocaleString() }}
+                <strong>{{ index + 1 }}</strong> :
+                {{ new Date(visit.dateTime).toLocaleString() }}
               </div>
             </li>
           </ul>
@@ -149,9 +153,9 @@ function getMinDateTimeValue() {
           </ul>
           <div v-else>Вільних лікарів на жаль немає</div>
         </div>
-        <div v-else>
+        <!-- <div v-else>
           <h4>Тут відображатимуться вільні лікарі</h4>
-        </div>
+        </div> -->
         <DataLoader v-if="doctorsLoading"></DataLoader>
       </div>
     </div>
