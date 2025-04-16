@@ -7,8 +7,10 @@ import Autocomplete from "@/components/ui/Autocomplete.vue";
 
 import Btn from "@/components/ui/Btn.vue";
 
+import { timestampToDateTime, getMinDateTimeValue } from "@/utils";
+
 import { useDoctorService } from "@/store/services/Doctor";
-import type { TDoctor } from "@/types";
+import type { TDoctor, TVisiting } from "@/types";
 import DataLoader from "@/components/DataLoader.vue";
 
 const doctorService = useDoctorService();
@@ -32,7 +34,7 @@ const dateTimeValue = ref<string>("");
 const doctors = ref<TDoctor[] | null>(null);
 
 const doctorsLoading = ref(false);
-const doctorSelectLoading = ref<number>(-1);
+const itemSelectLoading = ref<number | string>(-1);
 
 async function handleClickSubmit() {
   doctorsLoading.value = true;
@@ -52,26 +54,29 @@ async function handleClickSubmit() {
 }
 
 async function handleClickSelectDoctor(doctor: TDoctor) {
-  doctorSelectLoading.value = doctor.id;
+  itemSelectLoading.value = doctor.id;
 
   await visitingService.createVisiting({
     doctor: doctor.id,
     dateTime: new Date(dateTimeValue.value).getTime(),
+    createdAt: Date.now(),
   });
 
-  doctorSelectLoading.value = -1;
+  itemSelectLoading.value = -1;
 
   specialtyValue.value = "";
   dateTimeValue.value = "";
   doctors.value = null;
 }
 
-function getMinDateTimeValue() {
-  const now = new Date();
-  const pad = (n: any) => n.toString().padStart(2, "0");
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
-    now.getDate()
-  )}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+async function handleClickCancelVisiting(visiting: TVisiting) {
+  itemSelectLoading.value = visiting.id;
+
+  await visitingService.cancelVisiting({
+    id: visiting.id,
+  });
+
+  itemSelectLoading.value = -1;
 }
 </script>
 
@@ -107,24 +112,10 @@ function getMinDateTimeValue() {
             >
           </form>
         </div>
+        <DataLoader v-if="doctorsLoading"></DataLoader>
 
-        <div v-if="visitingService.visiting && !doctors">
-          <h4>Дата та час запланованих візитів</h4>
-          <ul v-if="visitingService.visiting.length">
-            <li
-              v-for="(visit, index) of visitingService.visiting"
-              :key="visit.id"
-            >
-              <div>
-                <strong>{{ index + 1 }}</strong> :
-                {{ new Date(visit.dateTime).toLocaleString() }}
-              </div>
-            </li>
-          </ul>
-          <div v-else>Записів не знайдено</div>
-        </div>
-
-        <div v-if="doctors" class="d-flex flex-column ga-3">
+        <div v-if="doctors" class="d-flex flex-column ga-2">
+          <h4>Вільні лікарі</h4>
           <ul v-if="doctors.length" class="d-flex flex-column ga-5">
             <li
               class="doctor-card d-flex ga-5"
@@ -143,7 +134,7 @@ function getMinDateTimeValue() {
                   <li>Кабінет: {{ doctor.room }}</li>
                 </ul>
                 <btn
-                  :loading="doctorSelectLoading === doctor.id"
+                  :loading="itemSelectLoading === doctor.id"
                   @click="handleClickSelectDoctor(doctor)"
                   variant="outlined"
                   >Обрати лікаря</btn
@@ -153,10 +144,56 @@ function getMinDateTimeValue() {
           </ul>
           <div v-else>Вільних лікарів на жаль немає</div>
         </div>
-        <!-- <div v-else>
-          <h4>Тут відображатимуться вільні лікарі</h4>
-        </div> -->
-        <DataLoader v-if="doctorsLoading"></DataLoader>
+
+        <div
+          class="d-flex flex-column ga-2"
+          v-else-if="!doctorsLoading && !doctors"
+        >
+          <h4>Ваші заплановані візити</h4>
+          <div v-if="visitingService.visiting">
+            <ul
+              class="d-flex flex-column ga-5"
+              v-if="visitingService.visiting.length"
+            >
+              <li
+                class="visiting-card d-flex ga-5"
+                v-for="visit of visitingService.visiting"
+                :key="visit.id"
+              >
+                <div class="visiting-card__photo">
+                  <img
+                    :src="(visit.doctor as TDoctor).photo"
+                    alt="doctor photo"
+                  />
+                </div>
+                <div class="d-flex flex-column ga-3">
+                  <ul class="visiting-card__features">
+                    <li>
+                      Дата та час прийому:
+                      {{ timestampToDateTime(visit.dateTime) }}
+                    </li>
+                    <li>
+                      Дата та час створення:
+                      {{ timestampToDateTime(visit.dateTime) }}
+                    </li>
+                    <li>Лікар: {{ (visit.doctor as TDoctor).title }}</li>
+                    <li>Лікарня: {{ (visit.doctor as TDoctor).clinic }}</li>
+                    <li>Адреса: {{ (visit.doctor as TDoctor).address }}</li>
+                    <li>Кабінет: {{ (visit.doctor as TDoctor).room }}</li>
+                  </ul>
+                  <btn
+                    :loading="itemSelectLoading === visit.id"
+                    @click="handleClickCancelVisiting(visit)"
+                    variant="outlined"
+                    >Скасувати візит</btn
+                  >
+                </div>
+              </li>
+            </ul>
+            <div v-else>Записів не знайдено</div>
+          </div>
+          <data-loader v-else></data-loader>
+        </div>
       </div>
     </div>
   </div>
@@ -197,11 +234,12 @@ function getMinDateTimeValue() {
   }
 }
 
+.visiting-card,
 .doctor-card {
   padding: 20px;
   border-radius: 10px;
   background-color: rgba(var(--color-sky), 0.1);
-
+  font-size: 14px;
   &__photo {
     width: 150px;
     height: 150px;
@@ -214,10 +252,9 @@ function getMinDateTimeValue() {
       object-fit: cover;
     }
   }
+}
 
-  &__features {
-    font-size: 14px;
-  }
+.doctor-card {
 }
 
 @media (max-width: 768px) {

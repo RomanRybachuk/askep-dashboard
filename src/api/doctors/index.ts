@@ -2,7 +2,7 @@ import type { TRequestFilter } from "@/types";
 import doctorWomenPhoto from "@/assets/doctorwomen.png";
 import doctorManPhoto from "@/assets/doctorman.png";
 
-const doctors = [
+export const doctors = [
   {
     id: 1,
     title: "Ірина Михайлівна",
@@ -350,7 +350,7 @@ export default class DoctorsApi {
 
                 break;
               case "equals":
-                loopCheck = item;
+                loopCheck = item === filter.value;
                 break;
             }
 
@@ -364,7 +364,7 @@ export default class DoctorsApi {
         });
 
         resolve(result);
-      }, 1500);
+      }, 1000);
     });
   }
 }

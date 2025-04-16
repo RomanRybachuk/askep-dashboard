@@ -25,6 +25,7 @@ export type TDoctor = {
 
 export type TVisiting = {
   id: string;
-  doctor: number;
+  doctor: number | TDoctor;
   dateTime: number;
+  createdAt: number;
 };

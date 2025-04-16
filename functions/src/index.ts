@@ -80,28 +80,31 @@ const routesMap = [
         return response.status(401).send(401);
       }
 
-      await db.collection("visiting").add({
+      const data = {
         doctor: request.body.doctor,
         dateTime: request.body.dateTime,
+        createdAt: request.body.createdAt,
         user: verifyResponse.uid,
-      });
+      };
 
-      const snapshots = await db
-        .collection("visiting")
-        .orderBy("dateTime", "desc")
-        .where("user", "==", verifyResponse.uid)
-        .get();
-
-      const data: TVisitingData[] = [];
-
-      snapshots.forEach((snapshot) => {
-        data.push({
-          id: snapshot.id,
-          ...(snapshot.data() as TVisitingSnapshot),
-        });
-      });
+      await db.collection("visiting").add(data);
 
       return response.status(200).send({ success: true, data: data });
+    },
+  },
+  {
+    url: "/visiting/cancel",
+    method: "POST",
+    controller: async (request: Request, response: Response) => {
+      const verifyResponse: any = await verifyAuth(request, response);
+
+      if (!verifyResponse) {
+        return response.status(401).send(401);
+      }
+
+      await db.collection("visiting").doc(request.body.id).delete();
+
+      return response.status(200).send({ success: true });
     },
   },
   {

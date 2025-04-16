@@ -1,26 +1,64 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { visitingApiInstance } from "@/api/visiting";
-import type { TVisiting } from "@/types";
+import type { TDoctor, TVisiting } from "@/types";
+import { doctorApiInstance } from "@/api/doctors";
 
 export const useVisitingService = defineStore("visitingService", () => {
   const visiting = ref<TVisiting[] | null>(null);
 
-  async function createVisiting(props: { doctor: number; dateTime: number }) {
+  async function createVisiting(props: {
+    doctor: number;
+    dateTime: number;
+    createdAt: number;
+  }) {
     const response = await visitingApiInstance.visitingCreate(props);
 
     if (response.data) {
-      visiting.value = response.data.data;
+      await getVisiting();
+    }
+  }
+
+  async function cancelVisiting({ id }: { id: TVisiting["id"] }) {
+    const response = await visitingApiInstance.visitingCancel({
+      id,
+    });
+
+    if (response.data) {
+      await getVisiting();
     }
   }
 
   async function getVisiting() {
     const response = await visitingApiInstance.visitingGet();
 
-    console.log("getVisiting", response);
-
     if (response.data) {
-      visiting.value = response.data.data;
+      const doctorsRequest = [];
+
+      for (let visit of response.data.data) {
+        doctorsRequest.push(
+          doctorApiInstance.getDoctors([
+            {
+              prop: "id",
+              strategy: "equals",
+              value: visit.doctor,
+            },
+          ])
+        );
+      }
+
+      const doctorsData = await Promise.all(doctorsRequest);
+
+      visiting.value = response.data.data.map(
+        (visit: TVisiting, index: number) => {
+          return {
+            ...visit,
+            doctor: (doctorsData[index] as TDoctor[])[0],
+          };
+        }
+      );
+
+      console.log("visiting.value", visiting.value);
     }
   }
 
@@ -33,5 +71,6 @@ export const useVisitingService = defineStore("visitingService", () => {
     getVisiting,
     visiting,
     setVisitingState,
+    cancelVisiting,
   };
 });
