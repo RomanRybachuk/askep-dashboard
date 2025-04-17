@@ -137,7 +137,7 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
                   :loading="itemSelectLoading === doctor.id"
                   @click="handleClickSelectDoctor(doctor)"
                   variant="outlined"
-                  >Обрати лікаря</btn
+                  >Створити запис</btn
                 >
               </div>
             </li>

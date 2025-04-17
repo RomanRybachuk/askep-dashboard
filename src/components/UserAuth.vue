@@ -77,9 +77,9 @@ async function handleClickSubmit() {
 <template>
   <div class="auth-page">
     <div class="container">
-      <div class="auth-page__inner d-flex">
+      <div class="auth-page__inner d-flex ga-5">
         <div class="auth-page__content d-flex align-center justify-center">
-          <logo :maxWidth="280"></logo>
+          <logo :style="{ maxWidth: 300 + 'px' }"></logo>
         </div>
         <div class="auth-page__content d-flex flex-column justify-center ga-4">
           <h1>{{ authData.titleText }}</h1>

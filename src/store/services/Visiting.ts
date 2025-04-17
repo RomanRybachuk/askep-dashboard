@@ -2,9 +2,11 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { visitingApiInstance } from "@/api/visiting";
 import type { TDoctor, TVisiting } from "@/types";
-import { doctorApiInstance } from "@/api/doctors";
+import { useDoctorService } from "@/store/services/Doctor";
 
 export const useVisitingService = defineStore("visitingService", () => {
+  const doctorService = useDoctorService();
+
   const visiting = ref<TVisiting[] | null>(null);
 
   async function createVisiting(props: {
@@ -33,21 +35,17 @@ export const useVisitingService = defineStore("visitingService", () => {
     const response = await visitingApiInstance.visitingGet();
 
     if (response.data) {
-      const doctorsRequest = [];
-
-      for (let visit of response.data.data) {
-        doctorsRequest.push(
-          doctorApiInstance.getDoctors([
+      const doctorsData = await Promise.all(
+        response.data.data.map((visit: TVisiting) =>
+          doctorService.getDoctors([
             {
               prop: "id",
               strategy: "equals",
-              value: visit.doctor,
+              value: visit.doctor as number,
             },
           ])
-        );
-      }
-
-      const doctorsData = await Promise.all(doctorsRequest);
+        )
+      );
 
       visiting.value = response.data.data.map(
         (visit: TVisiting, index: number) => {
@@ -57,8 +55,6 @@ export const useVisitingService = defineStore("visitingService", () => {
           };
         }
       );
-
-      console.log("visiting.value", visiting.value);
     }
   }
 
