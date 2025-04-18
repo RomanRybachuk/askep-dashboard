@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // Відображення
+      function AuthView(handlers) {
+        return {
+          template: /*html*/ `
+            <button>Sign in</button>
+          `,
+          mounted() {
+            document.querySelector("button").addEventListener("click", () => {
+              // Get userData from template form (Hardcode)
+              const userData = {
+                id: 1,
+                name: "Roman",
+                email: "roman@gmail.com",
+              };
+
+              // Validate handler
+              console.log("Validate something...");
+              if (!userData.name || !userData.email) return;
+
+              // Provide validated handler to controller
+              handlers.handleSignIn(userData);
+            });
+          },
+        };
+      }
+
+      // Контроллер
+      function AuthController(view) {
+        return view({
+          // Handlers
+          handleSignIn(userData) {
+            // Launch Sign In service
+            authUserService.signIn(userData);
+
+            // Launch another service
+            console.log("Started another service...");
+          },
+        });
+      }
+
+      // Сервіс
+      class AuthUserService {
+        constructor(provider) {
+          this.provider = provider;
+        }
+
+        signIn(userData) {
+          this.provider.signIn(userData);
+        }
+      }
+
+      // Сервіс
+      class RenderService {
+        constructor(controller) {
+          this.controller = controller;
+        }
+
+        render(root) {
+          document.querySelector(root).innerHTML = this.controller.template;
+
+          if (this.controller) {
+            this.controller.mounted();
+          }
+        }
+      }
+
+      // Абстракція
+      class AuthProvider {}
+
+      // Інтеграція (метод імплементації задачі)
+      class FirebaseAuthProvider extends AuthProvider {
+        signIn(userData) {
+          // do something with userData
+          console.log("logined user ");
+          console.log(userData);
+        }
+      }
+
+      const firebaseAuthProvider = new FirebaseAuthProvider();
+      const authUserService = new AuthUserService(firebaseAuthProvider);
+
+      const App = new RenderService(AuthController(AuthView));
+      App.render("#app");
+    </script>
+  </body>
+</html>

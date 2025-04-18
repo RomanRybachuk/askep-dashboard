@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed } from "vue";
 import { getMinDateTimeValue } from "@/utils";
 import Autocomplete from "@/components/ui/Autocomplete.vue";
 import type { TSpecialty } from "@/types";
@@ -10,21 +10,40 @@ const props = defineProps({
     required: true,
     type: Array as () => TSpecialty[],
   },
-  searchLoadingState: {
+  loadingState: {
     type: Boolean,
     required: false,
     default: false,
   },
+  specialty: {
+    required: true,
+    type: [Number, null],
+  },
+  dateTime: {
+    required: true,
+    type: [String, null],
+  },
 });
 
-const emits = defineEmits(["handleSearch"]);
+const emits = defineEmits([
+  "handleSearch",
+  "update:specialty",
+  "update:dateTime",
+]);
 
-const specialtyValue = ref<string | number>("");
-const dateTimeValue = ref<string>("");
+const specialtyModelValue = computed({
+  get: () => props.specialty,
+  set: (value: string) => emits("update:specialty", value),
+});
+
+const dateTimeModelValue = computed({
+  get: () => props.dateTime,
+  set: (value: string) => emits("update:dateTime", value),
+});
 
 async function handleClickSubmit() {
   // UI Validation
-  if (props.searchLoadingState) return;
+  if (props.loadingState) return;
 
   // Emit controller
   emits("handleSearch");
@@ -43,18 +62,20 @@ async function handleClickSubmit() {
           class="search-form__field"
           label="Спеціальність"
           :items="specialties"
-          v-model="specialtyValue"
+          v-model="specialtyModelValue"
         ></autocomplete>
         <input
           class="search-form__field"
-          v-model="dateTimeValue"
+          v-model="dateTimeModelValue"
           :min="getMinDateTimeValue()"
           type="datetime-local"
         />
       </div>
 
       <btn
-        :disabled="!(specialtyValue && dateTimeValue && !searchLoadingState)"
+        :disabled="
+          !(specialtyModelValue && dateTimeModelValue && !loadingState)
+        "
         type="submit"
         >Знайти вільного лікаря</btn
       >
