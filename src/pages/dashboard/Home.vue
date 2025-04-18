@@ -2,12 +2,11 @@
 import { ref } from "vue";
 
 import { useVisitingService } from "@/store/services/Visiting.ts";
-
-import Autocomplete from "@/components/ui/Autocomplete.vue";
+import Search from "@/components/Search.vue";
 
 import Btn from "@/components/ui/Btn.vue";
 
-import { timestampToDateTime, getMinDateTimeValue } from "@/utils";
+import { timestampToDateTime } from "@/utils";
 
 import { useDoctorService } from "@/store/services/Doctor";
 import type { TDoctor, TVisiting } from "@/types";
@@ -36,7 +35,7 @@ const doctors = ref<TDoctor[] | null>(null);
 const doctorsLoading = ref(false);
 const itemSelectLoading = ref<number | string>(-1);
 
-async function handleClickSubmit() {
+async function handleSearch() {
   doctorsLoading.value = true;
   doctors.value = null;
 
@@ -84,34 +83,11 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
   <div class="home-page">
     <div class="container">
       <div class="home-page__inner d-flex flex-column ga-4">
-        <div class="search-content d-flex flex-column align-center ga-6">
-          <h1>Знайти свого лікаря</h1>
-          <form
-            @submit.prevent="handleClickSubmit"
-            class="search-form d-flex align-center ga-5 w-100"
-          >
-            <div class="search-form__fields d-flex align-center ga-5">
-              <autocomplete
-                class="search-form__field"
-                label="Спеціальність"
-                :items="specialties"
-                v-model="specialtyValue"
-              ></autocomplete>
-              <input
-                class="search-form__field"
-                v-model="dateTimeValue"
-                :min="getMinDateTimeValue()"
-                type="datetime-local"
-              />
-            </div>
-
-            <btn
-              :disabled="!(specialtyValue && dateTimeValue && !doctorsLoading)"
-              type="submit"
-              >Знайти вільного лікаря</btn
-            >
-          </form>
-        </div>
+        <Search
+          @handleSearch="handleSearch"
+          :specialties="specialties"
+          :search-loading-state="doctorsLoading"
+        ></Search>
         <DataLoader v-if="doctorsLoading"></DataLoader>
 
         <div v-if="doctors" class="d-flex flex-column ga-2">
@@ -192,7 +168,7 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
             </ul>
             <div v-else>Записів не знайдено</div>
           </div>
-          <data-loader v-else></data-loader>
+          <DataLoader v-else></DataLoader>
         </div>
       </div>
     </div>
@@ -200,37 +176,9 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
 </template>
 
 <style scoped lang="scss">
-.search-content {
-  padding: 20px;
-  border-radius: 8px;
-  background-color: rgba(var(--color-blue), 0.8);
-  border: 1px solid rgba(var(--color-blue), 0.05);
-  color: rgba(var(--color-white), 1);
-
-  input {
-    color: rgba(var(--color-white), 1) !important;
-  }
-
-  input[type="datetime-local"] {
-    border: 1px solid rgba(var(--color-white), 1);
-    border-radius: 8px;
-    padding: 7px;
-  }
-}
-
 .home-page {
   &__inner {
     padding: 40px 0;
-  }
-}
-
-.search-form {
-  &__fields {
-    flex: 1 0 auto;
-  }
-
-  &__field {
-    width: 100%;
   }
 }
 
@@ -255,17 +203,5 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
 }
 
 .doctor-card {
-}
-
-@media (max-width: 768px) {
-  .search-form {
-    flex-direction: column;
-
-    &__fields {
-      flex-direction: column;
-      max-width: 500px;
-      width: 100%;
-    }
-  }
 }
 </style>
