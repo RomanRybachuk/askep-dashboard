@@ -12,6 +12,8 @@ import SearchCard from "@/components/SearchCard.vue";
 const doctorService = useDoctorService();
 const visitingService = useVisitingService();
 
+const searchFormComponent = ref<InstanceType<typeof SearchForm> | null>(null);
+
 const specialties = [
   { id: 1, title: "Терапевт" },
   { id: 2, title: "Педіатр" },
@@ -29,7 +31,7 @@ const dateTimeValue = ref<string | null>(null);
 const doctorsLoading = ref(false);
 const itemSelectLoading = ref<number | string>(-1);
 
-async function handleSearch() {
+async function handleSearch({}) {
   doctorsLoading.value = true;
 
   // Reset doctor list store value
@@ -57,8 +59,8 @@ async function handleClickSelectDoctor(doctor: TDoctor) {
 
   itemSelectLoading.value = -1;
 
-  specialtyValue.value = null;
-  dateTimeValue.value = null;
+  // View trigger
+  searchFormComponent.value?.resetFields();
 
   doctorService.setDoctors(null);
 }
@@ -79,6 +81,7 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
     <div class="container">
       <div class="home-page__inner d-flex flex-column ga-4">
         <SearchForm
+          ref="searchFormComponent"
           v-model:specialty="specialtyValue"
           v-model:dateTime="dateTimeValue"
           @handleSearch="handleSearch"

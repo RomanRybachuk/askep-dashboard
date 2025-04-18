@@ -31,6 +31,13 @@ const emits = defineEmits([
   "update:dateTime",
 ]);
 
+function resetFields() {
+  emits("update:specialty", null);
+  emits("update:dateTime", null);
+}
+
+defineExpose({ resetFields });
+
 const specialtyModelValue = computed({
   get: () => props.specialty,
   set: (value: string) => emits("update:specialty", value),
@@ -46,7 +53,7 @@ async function handleClickSubmit() {
   if (props.loadingState) return;
 
   // Emit controller
-  emits("handleSearch");
+  emits("handleSearch", {});
 }
 </script>
 
