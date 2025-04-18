@@ -22,6 +22,11 @@ const props = defineProps({
     type: String,
     default: "photo",
   },
+  action: {
+    required: false,
+    type: String,
+    default: "Action",
+  },
 });
 
 const dateFormat = {
@@ -57,10 +62,11 @@ function showItemValue(key: string) {
         </li>
       </ul>
       <btn
+        v-if="action"
         :loading="loadingState"
         @click="handleClickButton()"
         variant="outlined"
-        >Створити запис</btn
+        >{{ action }}</btn
       >
     </div>
   </li>

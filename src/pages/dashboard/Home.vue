@@ -100,6 +100,7 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
               @handleSelectItem="handleClickSelectDoctor"
               v-for="doctor of doctorService.doctors"
               :item="doctor"
+              action="Створити візит"
               :features="[
                 {
                   id: 'title',
@@ -143,6 +144,7 @@ async function handleClickCancelVisiting(visiting: TVisiting) {
                 v-for="visit of visitingService.visiting"
                 :item="visit"
                 image="doctor.photo"
+                action="Скасувати візит"
                 :features="[
                   {
                     id: 'dateTime:dateTime',
